@@ -436,6 +436,7 @@ bool yarp::dev::OVRHeadset::open(yarp::os::Searchable& cfg)
         paramParser.push_back(std::make_pair("tfDevice",            STRING));
         paramParser.push_back(std::make_pair("tfLocal",             STRING));
         paramParser.push_back(std::make_pair("tfRemote",            STRING));
+        paramParser.push_back(std::make_pair("tf_head_frame",       STRING));
         paramParser.push_back(std::make_pair("tf_left_hand_frame",  STRING));
         paramParser.push_back(std::make_pair("tf_right_hand_frame", STRING));
         paramParser.push_back(std::make_pair("tf_root_frame",       STRING));
@@ -502,6 +503,7 @@ bool yarp::dev::OVRHeadset::open(yarp::os::Searchable& cfg)
     }
 
     getStickAsAxis = cfg.find("stick_as_axis").asBool();
+    head_frame     = cfg.find("tf_head_frame").asString();
     left_frame     = cfg.find("tf_left_hand_frame").asString();
     right_frame    = cfg.find("tf_right_hand_frame").asString();
     root_frame     = cfg.find("tf_root_frame").asString();
@@ -984,8 +986,9 @@ void yarp::dev::OVRHeadset::run()
     {
         OVR::Quatf lRot = OVR::Quatf(ts.HandPoses[ovrHand_Left].ThePose.Orientation)  * OVR::Quatf(OVR::Vector3f(0, 0, 1), M_PI_2);
         OVR::Quatf rRot = OVR::Quatf(ts.HandPoses[ovrHand_Right].ThePose.Orientation) * OVR::Quatf(OVR::Vector3f(0, 0, 1), M_PI_2);
-        tfPublisher->setTransform(left_frame, "mobile_base_body_link", ovr2matrix(ts.HandPoses[ovrHand_Left].ThePose.Position,   lRot));
-        tfPublisher->setTransform(right_frame, "mobile_base_body_link", ovr2matrix(ts.HandPoses[ovrHand_Right].ThePose.Position, rRot));
+        tfPublisher->setTransform(left_frame, root_frame, ovr2matrix(ts.HandPoses[ovrHand_Left].ThePose.Position,   lRot));
+        tfPublisher->setTransform(right_frame, root_frame, ovr2matrix(ts.HandPoses[ovrHand_Right].ThePose.Position, rRot));
+        tfPublisher->setTransform(head_frame, root_frame, ovr2matrix(headpose.ThePose.Position, headpose.ThePose.Orientation));
     }
 
     //tfPublisher->setTransform(right_frame,   root_frame, yarp::math::operator*(T_Head.transposed(), T_RHand));

@@ -177,6 +177,7 @@ private:
 
     IFrameTransform* tfPublisher;
     bool             relative;
+    std::string      head_frame;
     std::string      left_frame;
     std::string      right_frame;
     std::string      root_frame;
