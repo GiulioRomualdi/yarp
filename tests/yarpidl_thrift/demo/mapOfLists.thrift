@@ -6,4 +6,6 @@
 struct MapOfLists
 {
     1: map<string, list<double>> vectors;
+    2: map<string, list<list<double>>> matrix;
+    3: map<string, list<map<string, list<double>>>> mapOfVectors;
 }
