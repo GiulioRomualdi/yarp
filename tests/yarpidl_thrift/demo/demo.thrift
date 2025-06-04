@@ -80,6 +80,12 @@ struct TestSomeLists {
   6: list<double> a_list_of_double,
   7: list<string> a_list_of_string,
   8: list<binary> a_list_of_binary
+  9: list<list<double>> a_list_of_list_of_double,
+}
+
+struct TestSomeMaps {
+  1: map<string, list<double>> a_map_of_list_of_double,
+  2: map<string, list<list<double>>> a_map_of_list_of_list_of_double,
 }
 
 /**
